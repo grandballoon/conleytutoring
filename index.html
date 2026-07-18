@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conley Tutoring — Coding & Game Development for Kids of Any Age</title>
+  <meta name="description" content="One-on-one tutoring in coding, math, and game development using Lua and Turtle Graphics. Building confidence, grades, and executive functioning in NYC and over Zoom." />
+  <meta name="color-scheme" content="light" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Conley Tutoring — Coding & Game Development for Kids" />
+  <meta property="og:description" content="Learn programming and math from the ground up with Lua and Turtle Graphics. Patient, individualized tutoring in NYC and over Zoom." />
+  <meta property="og:type" content="website" />
+
+  <style>
+    /* ---------- Design tokens ---------- */
+    :root {
+      --bg:            #f7f9fb;
+      --bg-elevated:   #ffffff;
+      --bg-tint:       #eef4f1;
+      --ink:           #16211d;
+      --ink-soft:      #46564f;
+      --ink-faint:     #6b7b74;
+      --line:          #e2e8e5;
+      --brand:         #1fae5a;   /* warm, vibrant turtle green */
+      --brand-deep:    #158043;
+      --brand-tint:    #e2f7e6;
+      --accent:        #4b62e8;   /* code blue */
+      --accent-tint:   #e8ecfd;
+      --amber:         #b7791f;
+      --amber-tint:    #fdf3e0;
+
+      --radius:        16px;
+      --radius-sm:     10px;
+      --shadow-sm:     0 1px 2px rgba(20, 40, 33, .06), 0 1px 3px rgba(20, 40, 33, .05);
+      --shadow-md:     0 6px 22px rgba(20, 40, 33, .08), 0 2px 6px rgba(20, 40, 33, .05);
+      --shadow-lg:     0 18px 50px rgba(20, 40, 33, .14);
+
+      --sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Fira Code", "Cascadia Code", Menlo, Consolas, monospace;
+
+      --maxw: 1080px;
+    }
+
+    /* ---------- Reset-ish ---------- */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.65;
+      font-size: 1.0625rem;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    h1, h2, h3 { line-height: 1.15; letter-spacing: -0.02em; margin: 0; font-weight: 700; }
+    p { margin: 0; }
+    a { color: var(--brand-deep); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+    a:hover { color: var(--brand); }
+
+    /* ---------- Accessibility helpers ---------- */
+    .skip-link {
+      position: absolute; left: 12px; top: -60px;
+      background: var(--ink); color: #fff; padding: 10px 16px;
+      border-radius: 8px; z-index: 100; transition: top .2s ease;
+      text-decoration: none; font-weight: 600;
+    }
+    .skip-link:focus { top: 12px; }
+
+    :focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+
+    /* ---------- Layout ---------- */
+    .wrap { width: min(100% - 2.5rem, var(--maxw)); margin-inline: auto; }
+    section { padding-block: clamp(3rem, 8vw, 5.5rem); }
+
+    /* ---------- Header ---------- */
+    .site-header {
+      position: sticky; top: 0; z-index: 40;
+      background: rgba(247, 249, 251, .82);
+      backdrop-filter: saturate(160%) blur(12px);
+      -webkit-backdrop-filter: saturate(160%) blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .site-header .wrap {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; padding-block: .85rem;
+    }
+    .brand { display: inline-flex; align-items: center; gap: .6rem; font-weight: 700; letter-spacing: -.02em; font-size: 1.08rem; color: var(--ink); text-decoration: none; }
+    .brand:hover { color: var(--ink); }
+    .brand-mark { width: 34px; height: 34px; flex: none; }
+    .brand small { display: block; font-weight: 500; font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-faint); }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+      font: inherit; font-weight: 600; cursor: pointer;
+      border-radius: 999px; padding: .8rem 1.4rem; border: 1.5px solid transparent;
+      text-decoration: none; white-space: nowrap; line-height: 1.1;
+      transition: transform .12s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: var(--brand); color: #fff; box-shadow: var(--shadow-sm); }
+    .btn-primary:hover { background: var(--brand-deep); color: #fff; box-shadow: var(--shadow-md); }
+    .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+    .btn-ghost:hover { background: var(--bg-tint); color: var(--ink); border-color: var(--brand); }
+    .btn-lg { padding: 1rem 1.8rem; font-size: 1.05rem; }
+    .header-cta { display: none; }
+    @media (min-width: 640px) { .header-cta { display: inline-flex; } }
+
+    /* ---------- Hero ---------- */
+    .hero { padding-top: clamp(2.5rem, 6vw, 4rem); padding-bottom: clamp(2.5rem, 6vw, 4rem); position: relative; overflow: hidden; }
+    .hero-grid {
+      display: grid; gap: clamp(2rem, 5vw, 3.5rem); align-items: center;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 900px) {
+      .hero-grid { grid-template-columns: 1.15fr .85fr; }
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-size: .8rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      color: var(--brand-deep); background: var(--brand-tint);
+      padding: .4rem .8rem; border-radius: 999px; margin-bottom: 1.25rem;
+    }
+    .eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--brand); }
+    .hero h1 { font-size: clamp(2.05rem, 5.2vw, 3.25rem); }
+    .hero h1 .grad {
+      background: linear-gradient(100deg, var(--brand) 10%, var(--accent) 95%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .hero-lede { margin-top: 1.25rem; font-size: clamp(1.05rem, 2.2vw, 1.22rem); color: var(--ink-soft); max-width: 46ch; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.9rem; }
+    .hero-meta { margin-top: 1.6rem; display: flex; flex-wrap: wrap; gap: 1.25rem; color: var(--ink-faint); font-size: .92rem; }
+    .hero-meta span { display: inline-flex; align-items: center; gap: .45rem; }
+    .hero-meta svg { width: 17px; height: 17px; color: var(--brand); flex: none; }
+
+    /* ---------- Turtle canvas card ---------- */
+    .turtle-card {
+      position: relative; background: var(--bg-elevated); border: 1px solid var(--line);
+      border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 1.1rem;
+      overflow: hidden;
+    }
+    .turtle-card::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        radial-gradient(120% 100% at 100% 0%, rgba(75,98,232,.06), transparent 55%),
+        radial-gradient(110% 90% at 0% 100%, rgba(31,174,90,.07), transparent 55%);
+      pointer-events: none;
+    }
+    .turtle-card .chrome { display: flex; align-items: center; gap: .45rem; margin-bottom: .85rem; padding-inline: .25rem; }
+    .turtle-card .chrome i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+    .dot-r { background: #f0736a; } .dot-y { background: #f4bf4f; } .dot-g { background: #57c98a; }
+    .turtle-card .file { margin-left: auto; font-family: var(--mono); font-size: .74rem; color: var(--ink-faint); }
+    .turtle-stage {
+      position: relative; aspect-ratio: 1 / 1; border-radius: var(--radius-sm);
+      background:
+        linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 100% 12.5%,
+        linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 12.5% 100%,
+        #fbfdfc;
+      overflow: hidden;
+    }
+    .turtle-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .draw-path {
+      fill: none; stroke: url(#turtleGrad); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
+      stroke-dasharray: 1840; stroke-dashoffset: 1840;
+    }
+    /* the arrow-shaped turtle head that crawls along the path (motion via SMIL) */
+    .turtle-cursor { fill: #1fae5a; stroke: #158043; stroke-width: 1; stroke-linejoin: round; }
+    /* Reduced motion: every example is SMIL, frozen to a settled frame via JS (svg.pauseAnimations) */
+    .code-strip {
+      margin-top: 1rem; background: #0f1a16; color: #d7e6df; border-radius: var(--radius-sm);
+      padding: .85rem 1rem; font-family: var(--mono); font-size: .82rem; line-height: 1.7;
+      overflow-x: auto;
+    }
+    .code-strip .k { color: #7fd1a8; } .code-strip .n { color: #f4bf4f; } .code-strip .c { color: #6b8079; } .code-strip .s { color: #e6a15b; }
+
+    /* dark "space" backdrop for the game panel */
+    .turtle-stage.stage-dark { background: radial-gradient(120% 100% at 50% 0%, #16273f 0%, #0c1622 72%); }
+
+    /* ---------- Carousel ---------- */
+    .slides { overflow: hidden; }
+    .slides-track {
+      display: flex; align-items: flex-start;
+      transition: transform .5s cubic-bezier(.4, 0, .2, 1);
+      will-change: transform;
+    }
+    .slide { flex: 0 0 100%; min-width: 0; }
+
+    .carousel-nav { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-top: 1rem; }
+    .carousel-dots { display: flex; align-items: center; gap: .5rem; }
+    .cdot {
+      width: 9px; height: 9px; padding: 0; border: none; border-radius: 50%;
+      background: var(--line); cursor: pointer; transition: background .2s ease, transform .2s ease;
+    }
+    .cdot:hover { background: #b9ccc3; }
+    .cdot.is-active { background: var(--brand); transform: scale(1.3); }
+    .cbtn {
+      display: inline-grid; place-items: center; width: 32px; height: 32px; flex: none;
+      border-radius: 50%; border: 1px solid var(--line); background: var(--bg-elevated);
+      color: var(--ink-soft); cursor: pointer; transition: border-color .2s ease, color .2s ease, background .2s ease;
+    }
+    .cbtn:hover { border-color: var(--brand); color: var(--brand-deep); background: var(--brand-tint); }
+    .cbtn svg { width: 16px; height: 16px; }
+
+    /* ---------- Prose blocks ---------- */
+    .section-head { max-width: 60ch; margin-bottom: 2.25rem; }
+    .section-head .eyebrow { margin-bottom: .9rem; }
+    .section-head h2 { font-size: clamp(1.6rem, 3.6vw, 2.3rem); }
+    .prose p + p { margin-top: 1.15rem; }
+    .prose { color: var(--ink-soft); max-width: 68ch; }
+    .prose strong { color: var(--ink); font-weight: 600; }
+
+    /* ---------- Feature trio ---------- */
+    .features { display: grid; gap: 1.1rem; grid-template-columns: 1fr; margin-top: 2.5rem; }
+    @media (min-width: 720px) { .features { grid-template-columns: repeat(3, 1fr); } }
+    .feature {
+      background: var(--bg-elevated); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 1.5rem 1.4rem; box-shadow: var(--shadow-sm);
+      transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .feature:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: #d3e2db; }
+    .feature .ficon {
+      width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center;
+      background: var(--brand-tint); color: var(--brand-deep); margin-bottom: 1rem;
+    }
+    .feature .ficon svg { width: 24px; height: 24px; }
+    .feature h3 { font-size: 1.12rem; margin-bottom: .4rem; }
+    .feature p { color: var(--ink-soft); font-size: .96rem; }
+    .feature:nth-child(2) .ficon { background: var(--accent-tint); color: var(--accent); }
+    .feature:nth-child(3) .ficon { background: var(--amber-tint); color: var(--amber); }
+
+    /* ---------- Tech chips ---------- */
+    .chips { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.8rem; }
+    .chip {
+      display: inline-flex; align-items: center; gap: .5rem; font-size: .88rem; font-weight: 500;
+      background: var(--bg-elevated); border: 1px solid var(--line); border-radius: 999px;
+      padding: .45rem .95rem; color: var(--ink-soft);
+    }
+    .chip b { color: var(--ink); font-weight: 600; }
+    .chip .swatch { width: 9px; height: 9px; border-radius: 50%; }
+
+    /* ---------- Callout ---------- */
+    .callout {
+      display: flex; gap: 1.1rem; align-items: flex-start;
+      background: linear-gradient(180deg, var(--brand-tint), #f0f9f4);
+      border: 1px solid #cbe7d8; border-left: 4px solid var(--brand);
+      border-radius: var(--radius); padding: 1.5rem 1.6rem; margin-top: 2.5rem;
+      color: #23453a;
+    }
+    .callout svg { width: 26px; height: 26px; color: var(--brand); flex: none; margin-top: .1rem; }
+    .callout p { font-size: .98rem; }
+    .callout strong { color: #123528; }
+
+    /* ---------- About ---------- */
+    .about { background: var(--bg-tint); border-block: 1px solid var(--line); }
+    .about-grid { display: grid; gap: clamp(1.75rem, 4vw, 3rem); grid-template-columns: 1fr; }
+    @media (min-width: 860px) { .about-grid { grid-template-columns: .8fr 1.2fr; align-items: start; } }
+    .about-card {
+      background: var(--bg-elevated); border: 1px solid var(--line); border-radius: var(--radius);
+      box-shadow: var(--shadow-sm); padding: 1.75rem; position: sticky; top: 90px;
+    }
+    .avatar {
+      width: 64px; height: 64px; border-radius: 16px; display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--brand), var(--accent)); color: #fff;
+      font-weight: 700; font-size: 1.5rem; letter-spacing: -.02em; margin-bottom: 1rem;
+    }
+    .about-card h3 { font-size: 1.25rem; }
+    .about-card .role { color: var(--ink-faint); font-size: .92rem; margin-top: .2rem; }
+    .credlist { list-style: none; padding: 0; margin: 1.25rem 0 0; display: grid; gap: .7rem; }
+    .credlist li { display: flex; gap: .6rem; font-size: .92rem; color: var(--ink-soft); }
+    .credlist svg { width: 18px; height: 18px; color: var(--brand); flex: none; margin-top: .15rem; }
+
+    /* ---------- Rates / CTA ---------- */
+    .rates { display: grid; gap: 1.1rem; grid-template-columns: 1fr; margin-top: 2.25rem; }
+    @media (min-width: 620px) { .rates { grid-template-columns: 1fr 1fr; } }
+    .rate-card {
+      background: var(--bg-elevated); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 1.6rem; box-shadow: var(--shadow-sm); position: relative;
+    }
+    .rate-card.featured { border-color: var(--brand); box-shadow: var(--shadow-md); }
+    .rate-card .tag {
+      position: absolute; top: 1.1rem; right: 1.1rem; font-size: .72rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .05em; color: var(--brand-deep);
+      background: var(--brand-tint); padding: .25rem .6rem; border-radius: 999px;
+    }
+    .rate-card h3 { font-size: 1.02rem; color: var(--ink-soft); font-weight: 600; }
+    .rate-card .price { font-size: 2.4rem; font-weight: 700; letter-spacing: -.03em; margin: .35rem 0 .1rem; }
+    .rate-card .price span { font-size: .95rem; font-weight: 500; color: var(--ink-faint); letter-spacing: 0; }
+    .rate-card p { color: var(--ink-faint); font-size: .92rem; }
+
+    /* ---------- Final CTA band ---------- */
+    .cta-band { background: var(--ink); color: #eaf2ee; border-radius: clamp(20px, 4vw, 28px); padding: clamp(2.25rem, 6vw, 3.5rem); text-align: center; position: relative; overflow: hidden; }
+    .cta-band::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        radial-gradient(60% 120% at 15% 0%, rgba(31,174,90,.35), transparent 60%),
+        radial-gradient(50% 120% at 90% 100%, rgba(75,98,232,.3), transparent 60%);
+    }
+    .cta-band > * { position: relative; }
+    .cta-band h2 { font-size: clamp(1.7rem, 4vw, 2.4rem); color: #fff; }
+    .cta-band p { color: #b9cbc3; margin: 1rem auto 0; max-width: 48ch; }
+    .cta-band .btn-primary { background: #fff; color: var(--brand-deep); margin-top: 1.9rem; }
+    .cta-band .btn-primary:hover { background: #eaf2ee; color: var(--brand-deep); }
+    .cta-band .fineprint { margin-top: 1.1rem; font-size: .85rem; color: #8ba79b; }
+    .cta-band .fineprint a { color: #d8e6e0; }
+
+    /* ---------- Footer ---------- */
+    footer.site-footer { padding-block: 2.5rem; border-top: 1px solid var(--line); }
+    footer.site-footer .wrap { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; color: var(--ink-faint); font-size: .9rem; }
+    footer.site-footer a { color: var(--ink-soft); }
+
+    /* reveal-on-scroll */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } }
+  </style>
+  <noscript>
+    <style>.reveal { opacity: 1 !important; transform: none !important; }</style>
+  </noscript>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ===== Header ===== -->
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="#top" aria-label="Conley Tutoring home">
+        <svg class="brand-mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <rect width="40" height="40" rx="11" fill="#e2f7e6"/>
+          <!-- turtle-graphics cursor: an arrowhead pointing along its heading -->
+          <path d="M20 7.5 L29.5 29.5 L20 24.5 L10.5 29.5 Z" fill="#1fae5a" stroke="#1fae5a" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>
+        <span>Conley Tutoring<small>Code · Math · Game Dev</small></span>
+      </a>
+      <a class="btn btn-primary header-cta" href="https://calendly.com/luke-conley/turtle-coding-intro" target="_blank" rel="noopener">Book a free call</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <span id="top"></span>
+
+    <!-- ===== Hero ===== -->
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="eyebrow">Coding &amp; game development tutoring</span>
+          <h1>Building <span class="grad">confidence, grades &amp; executive functioning</span> through coding and game design.</h1>
+          <p class="hero-lede">One-on-one tutoring that teaches programming and math from the ground up with <strong>Lua</strong> and <strong>Turtle Graphics</strong> — for kids as young as preschool, and useful all the way through college.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="https://calendly.com/luke-conley/turtle-coding-intro" target="_blank" rel="noopener">Book a free intro call</a>
+            <a class="btn btn-ghost btn-lg" href="#approach">See the approach</a>
+          </div>
+          <div class="hero-meta">
+            <span aria-hidden="true"></span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              NYC in-person &amp; Zoom
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              Free introductory call
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"/><path d="M12 8v4l3 2"/></svg>
+              All ages &amp; dispositions
+            </span>
+          </div>
+        </div>
+
+        <!-- Turtle graphics demo card (carousel of live examples) -->
+        <div class="turtle-card reveal" role="group" aria-roledescription="carousel" aria-label="Turtle Graphics examples">
+          <div class="chrome">
+            <i class="dot-r"></i><i class="dot-y"></i><i class="dot-g"></i>
+            <span class="file" aria-hidden="true">spiral.lua</span>
+          </div>
+
+          <div class="slides">
+            <div class="slides-track">
+            <!-- ===== Panel 1 · Spiral ===== -->
+            <div class="slide is-active" data-file="spiral.lua">
+              <div class="turtle-stage">
+                <svg viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="turtleGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#1fae5a"/>
+                      <stop offset="100%" stop-color="#4b62e8"/>
+                    </linearGradient>
+                  </defs>
+                  <!-- a spiral of rotating squares, the classic turtle-graphics figure -->
+                  <!-- line reveal is SMIL (not CSS) so it shares one timeline with the turtle and never drifts -->
+                  <path id="spiral" class="draw-path" d="
+                    M150 150 l0 -20 l20 0 l0 24 l-28 0 l0 -32 l36 0 l0 40 l-44 0 l0 -48 l52 0 l0 56
+                    l-60 0 l0 -64 l68 0 l0 72 l-76 0 l0 -80 l84 0 l0 88 l-92 0 l0 -96 l100 0 l0 104
+                    l-108 0 l0 -112 l116 0 l0 120">
+                    <animate attributeName="stroke-dashoffset" dur="7s" repeatCount="indefinite"
+                      calcMode="linear" keyTimes="0;0.55;0.82;1" values="1840;0;0;0"/>
+                    <animate attributeName="opacity" dur="7s" repeatCount="indefinite"
+                      calcMode="linear" keyTimes="0;0.55;0.82;1" values="1;1;1;0"/>
+                  </path>
+                  <!-- the turtle: an arrowhead pointing along its heading, crawling the path -->
+                  <path class="turtle-cursor" d="M11 0 L-8 -8.5 L-2.5 0 L-8 8.5 Z">
+                    <animateMotion dur="7s" repeatCount="indefinite" rotate="auto"
+                      calcMode="linear" keyTimes="0;0.55;0.82;1" keyPoints="0;1;1;1">
+                      <mpath xlink:href="#spiral"/>
+                    </animateMotion>
+                    <animate attributeName="opacity" dur="7s" repeatCount="indefinite"
+                      calcMode="linear" keyTimes="0;0.55;0.82;1" values="1;1;1;0"/>
+                  </path>
+                </svg>
+              </div>
+              <pre class="code-strip"><code><span class="c">-- draw a spiral</span>
+<span class="k">for</span> i = <span class="n">1</span>, <span class="n">32</span> <span class="k">do</span>
+  <span class="k">forward</span>(i * <span class="n">4</span>)
+  <span class="k">right</span>(<span class="n">90</span>)
+<span class="k">end</span></code></pre>
+            </div>
+
+            <!-- ===== Panel 2 · Game ===== -->
+            <div class="slide" data-file="invaders.lua">
+              <div class="turtle-stage stage-dark">
+                <svg viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <!-- starfield -->
+                  <g fill="#8fb3a6">
+                    <circle cx="40" cy="46" r="1.6"><animate attributeName="opacity" values="1;.2;1" dur="2.3s" repeatCount="indefinite"/></circle>
+                    <circle cx="250" cy="60" r="1.6"><animate attributeName="opacity" values=".3;1;.3" dur="1.9s" repeatCount="indefinite"/></circle>
+                    <circle cx="90" cy="30" r="1.2"><animate attributeName="opacity" values="1;.4;1" dur="2.7s" repeatCount="indefinite"/></circle>
+                    <circle cx="200" cy="34" r="1.2"><animate attributeName="opacity" values=".4;1;.4" dur="2.1s" repeatCount="indefinite"/></circle>
+                    <circle cx="150" cy="24" r="1.4"><animate attributeName="opacity" values="1;.3;1" dur="3.1s" repeatCount="indefinite"/></circle>
+                  </g>
+
+                  <!-- descending invader, drifting side to side, blinking when hit -->
+                  <g fill="#7c8cff">
+                    <animateTransform attributeName="transform" type="translate"
+                      values="120 78;180 78;120 78" dur="3s" repeatCount="indefinite" calcMode="linear"/>
+                    <animate attributeName="opacity" dur="1.5s" repeatCount="indefinite"
+                      keyTimes="0;0.58;0.62;0.7;1" values="1;1;0.12;1;1"/>
+                    <rect x="-18" y="-11" width="36" height="20" rx="8"/>
+                    <rect x="-22" y="4" width="8" height="9" rx="2"/>
+                    <rect x="14" y="4" width="8" height="9" rx="2"/>
+                    <circle cx="-7" cy="-2" r="3.4" fill="#0f1a16"/>
+                    <circle cx="7" cy="-2" r="3.4" fill="#0f1a16"/>
+                  </g>
+
+                  <!-- laser bolt firing upward from the ship -->
+                  <rect x="147" width="6" height="15" rx="3" fill="#f4bf4f">
+                    <animate attributeName="y" dur="1.5s" repeatCount="indefinite"
+                      keyTimes="0;0.6;1" values="230;74;74" calcMode="linear"/>
+                    <animate attributeName="opacity" dur="1.5s" repeatCount="indefinite"
+                      keyTimes="0;0.58;0.6;1" values="1;1;0;0"/>
+                  </rect>
+
+                  <!-- the player ship: the arrow-turtle, pointing up -->
+                  <path class="turtle-cursor" d="M0 -14 L11 11 L0 5 L-11 11 Z" transform="translate(150,248)">
+                    <animateTransform attributeName="transform" type="translate"
+                      values="142 248;158 248;142 248" dur="4s" repeatCount="indefinite" calcMode="linear"/>
+                  </path>
+                </svg>
+              </div>
+              <pre class="code-strip"><code><span class="c">-- a tiny space shooter</span>
+<span class="k">while</span> alive <span class="k">do</span>
+  <span class="k">if</span> key(<span class="s">"space"</span>) <span class="k">then</span> shoot() <span class="k">end</span>
+  move(invader, dx)
+<span class="k">end</span></code></pre>
+            </div>
+
+            <!-- ===== Panel 3 · Pythagorean theorem ===== -->
+            <div class="slide" data-file="pythagoras.lua">
+              <div class="turtle-stage">
+                <svg viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="pythGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#1fae5a"/>
+                      <stop offset="100%" stop-color="#4b62e8"/>
+                    </linearGradient>
+                  </defs>
+                  <!-- one envelope group: fades the whole figure in at the start, out at the end -->
+                  <g>
+                    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+                      keyTimes="0;0.05;0.93;1" values="0;1;1;0" calcMode="linear"/>
+
+                    <!-- square on side a (vertical leg) -->
+                    <polygon points="115,120 115,180 55,180 55,120" fill="rgba(31,174,90,.16)" stroke="#1fae5a" stroke-width="1.5">
+                      <animate attributeName="opacity" dur="9s" repeatCount="indefinite" keyTimes="0;0.40;0.50;1" values="0;0;1;1"/>
+                    </polygon>
+                    <!-- square on side b (horizontal leg) -->
+                    <polygon points="115,180 195,180 195,240 115,240" fill="rgba(75,98,232,.16)" stroke="#4b62e8" stroke-width="1.5">
+                      <animate attributeName="opacity" dur="9s" repeatCount="indefinite" keyTimes="0;0.50;0.60;1" values="0;0;1;1"/>
+                    </polygon>
+                    <!-- square on the hypotenuse c -->
+                    <polygon points="195,180 115,120 175,40 255,100" fill="rgba(183,121,31,.16)" stroke="#b7791f" stroke-width="1.5">
+                      <animate attributeName="opacity" dur="9s" repeatCount="indefinite" keyTimes="0;0.60;0.72;1" values="0;0;1;1"/>
+                    </polygon>
+
+                    <!-- right-angle marker -->
+                    <path d="M115 168 L127 168 L127 180" fill="none" stroke="#46564f" stroke-width="1.5">
+                      <animate attributeName="opacity" dur="9s" repeatCount="indefinite" keyTimes="0;0.34;0.40;1" values="0;0;1;1"/>
+                    </path>
+
+                    <!-- the triangle, drawn by the turtle -->
+                    <path id="triangle" d="M115 180 L115 120 L195 180 Z" fill="none"
+                      stroke="url(#pythGrad)" stroke-width="3" stroke-linejoin="round"
+                      stroke-dasharray="240" stroke-dashoffset="240">
+                      <animate attributeName="stroke-dashoffset" dur="9s" repeatCount="indefinite"
+                        keyTimes="0;0.34;1" values="240;0;0" calcMode="linear"/>
+                    </path>
+                    <path class="turtle-cursor" d="M11 0 L-8 -8.5 L-2.5 0 L-8 8.5 Z">
+                      <animateMotion dur="9s" repeatCount="indefinite" rotate="auto"
+                        calcMode="linear" keyTimes="0;0.34;1" keyPoints="0;1;1">
+                        <mpath xlink:href="#triangle"/>
+                      </animateMotion>
+                    </path>
+
+                    <!-- labels -->
+                    <g font-family="ui-monospace, Menlo, monospace" font-size="15" font-weight="700" text-anchor="middle">
+                      <text x="82" y="155" fill="#158043">a²<animate attributeName="opacity" dur="9s" repeatCount="indefinite" keyTimes="0;0.44;0.52;1" values="0;0;1;1"/></text>
+                      <text x="155" y="216" fill="#3a49b8">b²<animate attributeName="opacity" dur="9s" repeatCount="indefinite" keyTimes="0;0.54;0.62;1" values="0;0;1;1"/></text>
+                      <text x="205" y="112" fill="#8a5a12">c²<animate attributeName="opacity" dur="9s" repeatCount="indefinite" keyTimes="0;0.64;0.74;1" values="0;0;1;1"/></text>
+                      <text x="150" y="284" fill="#16211d" font-size="16">a² + b² = c²<animate attributeName="opacity" dur="9s" repeatCount="indefinite" keyTimes="0;0.76;0.86;1" values="0;0;1;1"/></text>
+                    </g>
+                  </g>
+                </svg>
+              </div>
+              <pre class="code-strip"><code><span class="c">-- prove a² + b² = c²</span>
+<span class="k">forward</span>(<span class="n">90</span>)   <span class="c">-- leg a</span>
+<span class="k">right</span>(<span class="n">90</span>); <span class="k">forward</span>(<span class="n">120</span>) <span class="c">-- leg b</span>
+back_to_start()  <span class="c">-- hyp c = 150</span></code></pre>
+            </div>
+            </div>
+          </div>
+
+          <!-- carousel controls -->
+          <div class="carousel-nav">
+            <button class="cbtn prev" type="button" aria-label="Previous example">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            <div class="carousel-dots" role="tablist" aria-label="Choose an example">
+              <button class="cdot is-active" type="button" role="tab" aria-selected="true" aria-label="Spiral"></button>
+              <button class="cdot" type="button" role="tab" aria-selected="false" aria-label="Space shooter game"></button>
+              <button class="cdot" type="button" role="tab" aria-selected="false" aria-label="Pythagorean theorem"></button>
+            </div>
+            <button class="cbtn next" type="button" aria-label="Next example">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Approach ===== -->
+    <section id="approach">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">The approach</span>
+          <h2>Two proven tools, one intuitive path into code and math.</h2>
+        </div>
+        <div class="prose reveal">
+          <p><strong>Turtle Graphics</strong> (also known as “Turtle Art”) is a classic educational computer program with roots going back to the 1960s.</p>
+          <p>Co-developed alongside children by researchers at MIT, it teaches math and computer science in an intuitive, embodied, way.</p>
+          <p>Turtle Art is accessible to kids as young as preschool, but useful even in college-level math and physics classes.</p>
+          <p><strong>Lua</strong> is a simple and accessible programming language best known for its role in the gaming sector, used in games like Balatro, Roblox, and World of Warcraft.</p>
+          <p>I created <strong><a href="https://luaturtle.com">luaturtle.com</a></strong> to bring these two powerful forms together.</p>
+        </div>
+
+        <div class="features">
+          <div class="feature reveal">
+            <div class="ficon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+            </div>
+            <h3>Coding, from the ground up</h3>
+            <p>Concrete, step-by-step thinking that turns abstract math into something students can see, move, and control.</p>
+          </div>
+          <div class="feature reveal">
+            <div class="ficon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><circle cx="16" cy="11" r="1"/><circle cx="18" cy="14" r="1"/></svg>
+            </div>
+            <h3>Game development</h3>
+            <p>The same language behind real, beloved games — so the skills students build lead somewhere they already care about.</p>
+          </div>
+          <div class="feature reveal">
+            <div class="ficon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 0-4 12.7V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.3A7 7 0 0 0 12 2Z"/><path d="M9 22h6"/></svg>
+            </div>
+            <h3>Confidence &amp; executive function</h3>
+            <p>Small, visible wins build focus, planning, and the belief that <em>“I can figure this out.”</em></p>
+          </div>
+        </div>
+
+        <div class="callout reveal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg>
+          <p>These methods are <strong>especially useful for students who are sensitive, twice-exceptional, have been told they “don’t have a brain for math,”</strong> or could benefit from individualized, detailed attention.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== About ===== -->
+    <section class="about" id="about">
+      <div class="wrap about-grid">
+        <aside class="about-card reveal">
+          <div class="avatar" aria-hidden="true">LC</div>
+          <h3>Luke Conley</h3>
+          <p class="role">Tutor · Resident at the <a href="https://www.recurse.com/" target="_blank" rel="noopener">Recurse Center</a></p>
+          <ul class="credlist">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              Nearly a decade writing code
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              15+ years working alongside kids of all needs
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              Taught engineers, teens &amp; elementary students alike
+            </li>
+          </ul>
+        </aside>
+
+        <div class="prose reveal">
+          <span class="eyebrow">Who I am</span>
+          <p style="margin-top:.9rem">My name is <strong>Luke Conley.</strong> I've been working with kids of all ages and dispositions for over half my life, and have been writing code for nearly a decade. (I’m currently a resident at the <a href="https://www.recurse.com/" target="_blank" rel="noopener">Recurse Center</a>.)</p>
+          <p>My approach is grounded in <strong>unconditional positive regard</strong> and tuned to a student's existing interests.</p>
+          <p>I’ve taught everyone from working engineers to bootcamp programs to NYC public school students.</p>
+          <p>If this can benefit you or a student you know, please <a href="https://calendly.com/luke-conley/turtle-coding-intro">book a free intro call.</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Rates + CTA ===== -->
+    <section id="book">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">Rates &amp; logistics</span>
+          <h2>Simple, transparent pricing.</h2>
+        </div>
+
+        <div class="rates">
+          <div class="rate-card featured reveal">
+            <span class="tag">Recommended to start</span>
+            <h3>In-person tutoring</h3>
+            <div class="price">$150<span> / hour</span></div>
+            <p>Based in NYC. I always encourage an in-person approach for the first few meetings at least.</p>
+          </div>
+          <div class="rate-card reveal">
+            <h3>Over Zoom</h3>
+            <div class="price">$100<span> / hour</span></div>
+            <p>Flexible remote sessions once we’ve built a rhythm together.</p>
+          </div>
+        </div>
+
+        <div class="cta-band reveal" style="margin-top:2.75rem">
+          <h2>Book a free introductory call</h2>
+          <p>We’ll figure out together whether this is a good fit. No pressure, no cost.</p>
+          <a class="btn btn-primary btn-lg" href="https://calendly.com/luke-conley/turtle-coding-intro" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            Book a Free Introductory Call
+          </a>
+          <p class="fineprint">Or email me directly at <a href="mailto:luke.sovern.conley@proton.me">luke.sovern.conley@proton.me</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© <span id="year"></span> Conley Tutoring · NYC</span>
+      <span>Code · Math · Game Development · Built with Lua &amp; Turtle Graphics</span>
+    </div>
+  </footer>
+
+  <script>
+    // Current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Reveal-on-scroll (progressive enhancement; content is visible without JS via .in fallback below)
+    (function () {
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var els = document.querySelectorAll('.reveal');
+      if (reduce || !('IntersectionObserver' in window)) {
+        els.forEach(function (el) { el.classList.add('in'); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+      els.forEach(function (el) { io.observe(el); });
+    })();
+
+    // Turtle-graphics example carousel: auto-advance + manual controls
+    (function () {
+      var card = document.querySelector('.turtle-card');
+      if (!card) return;
+      var track  = card.querySelector('.slides-track');
+      var slides = Array.prototype.slice.call(card.querySelectorAll('.slide'));
+      var dots   = Array.prototype.slice.call(card.querySelectorAll('.cdot'));
+      var fileEl = card.querySelector('.file');
+      var prev   = card.querySelector('.cbtn.prev');
+      var next   = card.querySelector('.cbtn.next');
+      if (!track || slides.length < 2) return;
+
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var DELAY = 5200;
+      var i = 0, timer = null;
+
+      function show(n) {
+        i = (n + slides.length) % slides.length;
+        track.style.transform = 'translateX(' + (-i * 100) + '%)';
+        slides.forEach(function (s, idx) {
+          s.classList.toggle('is-active', idx === i);
+          s.setAttribute('aria-hidden', idx === i ? 'false' : 'true');
+        });
+        dots.forEach(function (d, idx) {
+          var on = idx === i;
+          d.classList.toggle('is-active', on);
+          d.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        if (fileEl) fileEl.textContent = slides[i].getAttribute('data-file') || '';
+      }
+      function restart() {
+        if (timer) { clearInterval(timer); timer = null; }
+        if (!reduce) timer = setInterval(function () { show(i + 1); }, DELAY);
+      }
+      function go(n) { show(n); restart(); }
+
+      if (prev) prev.addEventListener('click', function () { go(i - 1); });
+      if (next) next.addEventListener('click', function () { go(i + 1); });
+      dots.forEach(function (d, idx) { d.addEventListener('click', function () { go(idx); }); });
+      // pause on hover / focus so a reader can study a panel
+      card.addEventListener('mouseenter', function () { if (timer) { clearInterval(timer); timer = null; } });
+      card.addEventListener('mouseleave', restart);
+      card.addEventListener('focusin', function () { if (timer) { clearInterval(timer); timer = null; } });
+      card.addEventListener('focusout', restart);
+
+      // Respect reduced motion: freeze each SVG's SMIL animation on a settled frame
+      if (reduce) {
+        card.querySelectorAll('svg').forEach(function (svg) {
+          try { svg.setCurrentTime(6); svg.pauseAnimations(); } catch (e) {}
+        });
+      }
+
+      show(0);
+      restart();
+    })();
+  </script>
+</body>
+</html>
