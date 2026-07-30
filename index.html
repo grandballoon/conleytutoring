@@ -222,6 +222,29 @@
     .prose { color: var(--ink-soft); max-width: 68ch; }
     .prose strong { color: var(--ink); font-weight: 600; }
 
+    /* ---------- Tabs ---------- */
+    /* Progressive enhancement: without JS every panel is visible with its own heading.
+       JS adds .js-tabs, which reveals the tablist and hides the per-panel headings. */
+    .tabs .tablist { display: none; }
+    .tabs.js-tabs .tablist {
+      display: flex; flex-wrap: wrap; gap: .35rem;
+      border-bottom: 1px solid var(--line); margin-bottom: 1.75rem;
+    }
+    .tab {
+      font: inherit; font-weight: 600; cursor: pointer;
+      background: none; border: none; border-bottom: 2px solid transparent;
+      padding: .7rem .95rem; margin-bottom: -1px;
+      color: var(--ink-faint); border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      transition: color .2s ease, border-color .2s ease, background .2s ease;
+    }
+    .tab:hover { color: var(--ink); background: var(--bg-tint); }
+    .tab[aria-selected="true"] { color: var(--brand-deep); border-bottom-color: var(--brand); }
+    .tabpanel + .tabpanel { margin-top: 2rem; }
+    .tabpanel h3 { font-size: 1.15rem; color: var(--ink); margin-bottom: .9rem; }
+    .tabs.js-tabs .tabpanel + .tabpanel { margin-top: 0; }
+    .tabs.js-tabs .tabpanel h3 { display: none; }
+    .tabpanel[hidden] { display: none; }
+
     /* ---------- Feature trio ---------- */
     .features { display: grid; gap: 1.1rem; grid-template-columns: 1fr; margin-top: 2.5rem; }
     @media (min-width: 720px) { .features { grid-template-columns: repeat(3, 1fr); } }
@@ -266,21 +289,61 @@
     /* ---------- About ---------- */
     .about { background: var(--bg-tint); border-block: 1px solid var(--line); }
     .about-grid { display: grid; gap: clamp(1.75rem, 4vw, 3rem); grid-template-columns: 1fr; }
-    @media (min-width: 860px) { .about-grid { grid-template-columns: .8fr 1.2fr; align-items: start; } }
     .about-card {
       background: var(--bg-elevated); border: 1px solid var(--line); border-radius: var(--radius);
-      box-shadow: var(--shadow-sm); padding: 1.75rem; position: sticky; top: 90px;
+      box-shadow: var(--shadow-sm); padding: 1.75rem;
+    }
+    /* Two-column only: the card sticks beside the prose. In the single-column
+       layout it must scroll with the text instead of floating over it. */
+    @media (min-width: 860px) {
+      .about-grid { grid-template-columns: .8fr 1.2fr; align-items: start; }
+      .about-card { position: sticky; top: 90px; }
     }
     .avatar {
-      width: 64px; height: 64px; border-radius: 16px; display: grid; place-items: center;
-      background: linear-gradient(135deg, var(--brand), var(--accent)); color: #fff;
-      font-weight: 700; font-size: 1.5rem; letter-spacing: -.02em; margin-bottom: 1rem;
+      width: 100%; aspect-ratio: 1 / 1; border-radius: 50%;
+      box-shadow: var(--shadow-sm);
+      background-image: url("headshot.jpg");
+      background-repeat: no-repeat;
+      background-size: 100%;          /* ZOOM: bigger % = more zoomed in (try 130%, 160%) */
+      background-position: 50% 30%;   /* PAN: left/right %  up/down % (0%=top, 100%=bottom) */
+      background-color: var(--brand); /* fallback while image loads */
     }
     .about-card h3 { font-size: 1.25rem; }
     .about-card .role { color: var(--ink-faint); font-size: .92rem; margin-top: .2rem; }
     .credlist { list-style: none; padding: 0; margin: 1.25rem 0 0; display: grid; gap: .7rem; }
     .credlist li { display: flex; gap: .6rem; font-size: .92rem; color: var(--ink-soft); }
     .credlist svg { width: 18px; height: 18px; color: var(--brand); flex: none; margin-top: .15rem; }
+
+    /* ---------- Testimonial ---------- */
+    .testimonials {
+      padding-block: clamp(2.75rem, 6vw, 4rem);
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+    }
+    .testimonials .section-head { max-width: 60ch; margin-inline: auto; text-align: center; margin-bottom: 1.9rem; }
+    .testimonials .section-head .eyebrow { margin-inline: auto; }
+    .tcard {
+      max-width: 68ch; margin-inline: auto;
+      background: var(--bg-elevated); border: 1px solid var(--line);
+      border-radius: var(--radius); box-shadow: var(--shadow-md);
+      padding: clamp(1.6rem, 4vw, 2.4rem); display: flex; flex-direction: column; gap: 1.2rem;
+    }
+    .tcard .stars { display: flex; gap: .2rem; color: var(--amber); }
+    .tcard .stars svg { width: 18px; height: 18px; }
+    .tcard blockquote {
+      margin: 0; color: var(--ink-soft);
+      font-size: clamp(1rem, 1.6vw, 1.1rem); line-height: 1.7;
+    }
+    .tcard blockquote p { margin: 0; }
+    .tcard blockquote p + p { margin-top: .9rem; }
+    .tcard .who { display: flex; align-items: center; gap: .8rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+    .tcard .who .pfp {
+      width: 42px; height: 42px; border-radius: 50%; flex: none;
+      display: grid; place-items: center; font-weight: 700; font-size: .95rem; color: #fff;
+      background: var(--brand);
+    }
+    .tcard .who .name { font-weight: 600; font-size: .95rem; color: var(--ink); }
+    .tcard .who .rel { font-size: .85rem; color: var(--ink-faint); }
 
     /* ---------- Rates / CTA ---------- */
     .rates { display: grid; gap: 1.1rem; grid-template-columns: 1fr; margin-top: 2.25rem; }
@@ -299,6 +362,7 @@
     .rate-card .price { font-size: 2.4rem; font-weight: 700; letter-spacing: -.03em; margin: .35rem 0 .1rem; }
     .rate-card .price span { font-size: .95rem; font-weight: 500; color: var(--ink-faint); letter-spacing: 0; }
     .rate-card p { color: var(--ink-faint); font-size: .92rem; }
+    .rates-note { margin-top: 1.1rem; color: var(--ink-faint); font-size: .92rem; text-align: center; }
 
     /* ---------- Final CTA band ---------- */
     .cta-band { background: var(--ink); color: #eaf2ee; border-radius: clamp(20px, 4vw, 28px); padding: clamp(2.25rem, 6vw, 3.5rem); text-align: center; position: relative; overflow: hidden; }
@@ -558,6 +622,53 @@ back_to_start()  <span class="c">-- hyp c = 150</span></code></pre>
       </div>
     </section>
 
+    <!-- ===== About ===== -->
+    <section class="about" id="about">
+      <div class="wrap about-grid">
+        <aside class="about-card">
+          <div class="avatar" role="img" aria-label="Luke Conley"></div>
+        </aside>
+
+        <div class="prose reveal">
+          <span class="eyebrow">Who I am</span>
+          <p style="margin-top:.9rem">My name is <strong>Luke Conley.</strong></p>
+          <p>I've been a one-on-one for children with autism, a professional software engineer, and an NYC high school computer science teacher.</p>
+          <p>I built <a href="https://luaturtle.com/">luaturtle.com</a> to bridge the gap between the emotional and intellectual sides of STEM learning.</p>
+          <p>I bring a positive, grounding perspective to learning coding and math. For me, this is just one more step in a lifetime of working alongside kids in pursuit of creative learning and growth.</p>
+          <p>If this might benefit a student you know, read more about my approach or <a href="https://calendly.com/luke-conley/turtle-coding-intro">book a free intro call.</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Testimonial ===== -->
+    <section class="testimonials" id="testimonials" aria-label="What families say">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <h2>What families say:</h2>
+        </div>
+
+        <figure class="tcard reveal">
+          <div class="stars" aria-label="5 out of 5 stars">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2Z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2Z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2Z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2Z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2Z"/></svg>
+          </div>
+          <blockquote>
+            <p>My 8 year old nephew is extremely shy and it takes a lot of patience to bring him out of his shell, so finding the right activity for him has been hard.</p>
+            <p> I wanted to give him something that tapped into his interests (he loves Roblox) so I figured coding might be a good bridge to him engaging with what he already likes more creatively.</p>
+            <p>Luke met him exactly where he was, moved at his pace, and made the lessons fun enough that he forgot to be nervous and is loving building things with code.</p>
+            <p>I've even learned a ton just watching them and am loving how accessible and fun it was and how nice it&rsquo;s been to connect with him about the things he&rsquo;s building.</p> 
+            <p>I&rsquo;ve also seen him grow in his willingness to try new things and work through challenges. Can&rsquo;t recommend turtle tutoring enough!</p>
+          </blockquote>
+          <figcaption class="who">
+            <span><span class="name">From the family of Algie, an 8-year-old student</span><br></span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
     <!-- ===== Approach ===== -->
     <section id="approach">
       <div class="wrap">
@@ -565,12 +676,28 @@ back_to_start()  <span class="c">-- hyp c = 150</span></code></pre>
           <span class="eyebrow">The approach</span>
           <h2>Two proven tools, one intuitive path into code and math.</h2>
         </div>
-        <div class="prose reveal">
-          <p><strong>Turtle Graphics</strong> (also known as “Turtle Art”) is a classic educational computer program with roots going back to the 1960s.</p>
-          <p>Co-developed alongside children by researchers at MIT, it teaches math and computer science in an intuitive, embodied, way.</p>
-          <p>Turtle Art is accessible to kids as young as preschool, but useful even in college-level math and physics classes.</p>
-          <p><strong>Lua</strong> is a simple and accessible programming language best known for its role in the gaming sector, used in games like Balatro, Roblox, and World of Warcraft.</p>
-          <p>I created <strong><a href="https://luaturtle.com">luaturtle.com</a></strong> to bring these two powerful forms together.</p>
+        <div class="tabs reveal">
+          <div class="tablist" role="tablist" aria-label="The approach">
+            <button class="tab" type="button" role="tab" id="tab-turtle" aria-controls="panel-turtle" aria-selected="true">About Turtle Code</button>
+            <button class="tab" type="button" role="tab" id="tab-lua" aria-controls="panel-lua" aria-selected="false" tabindex="-1">About Lua</button>
+          </div>
+
+          <div class="prose tabpanel" role="tabpanel" id="panel-turtle" aria-labelledby="tab-turtle" tabindex="0">
+            <h3>About Turtle Graphics</h3>
+            <p>Turtle Graphics allows users to make interactive art with math and code. It was codeveloped by MIT professors, children, and their schoolteachers in the 1960s and ’70s.</p>
+            <p>Users control the movement of a little avatar (nicknamed a “Turtle”) that moves through space a bit like a person does, using only four commands: move forward, move back, turn left, and turn right.</p>
+            <p>This simple design constraint lets people reason about math and engineer problems using the same everyday thinking we use to walk to a friend’s house.</p>
+            <p>This familiarity makes it straightforward to break “hard” mathematical problems down into small, recognizable parts. The results on student progress can be remarkable.</p>
+            <p>(It’s also a lot of fun.)</p>
+          </div>
+
+          <div class="prose tabpanel" role="tabpanel" id="panel-lua" aria-labelledby="tab-lua" tabindex="0">
+            <h3>About the Lua Language</h3>
+            <p>Over the years, multiple versions of Turtle Graphics have been built, using different programming languages.</p>
+            <p>I built <a href="https://luaturtle.com/">luaturtle.com</a>, which uses the Lua language, because of its widespread use in game development. World of Warcraft, Roblox, Crysis, and Balatro all use Lua in one way or another.</p>
+            <p>Lua is very simple, and an excellent language for beginners.</p>
+            <p>Because of the strong similarities between Turtle Art and videogames in general, this makes Lua Turtle Graphics an ideal fit for any student with a preexisting interest in gaming or game development.</p>
+          </div>
         </div>
 
         <div class="features">
@@ -599,40 +726,7 @@ back_to_start()  <span class="c">-- hyp c = 150</span></code></pre>
 
         <div class="callout reveal">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg>
-          <p>These methods are <strong>especially useful for students who are sensitive, twice-exceptional, have been told they “don’t have a brain for math,”</strong> or could benefit from individualized, detailed attention.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== About ===== -->
-    <section class="about" id="about">
-      <div class="wrap about-grid">
-        <aside class="about-card">
-          <div class="avatar" aria-hidden="true">LC</div>
-          <h3>Luke Conley</h3>
-          <p class="role">Tutor · Resident at the <a href="https://www.recurse.com/" target="_blank" rel="noopener">Recurse Center</a></p>
-          <ul class="credlist">
-            <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-              Nearly a decade writing code
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-              15+ years working alongside kids of all needs
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-              Taught engineers, teens &amp; elementary students alike
-            </li>
-          </ul>
-        </aside>
-
-        <div class="prose reveal">
-          <span class="eyebrow">Who I am</span>
-          <p style="margin-top:.9rem">My name is <strong>Luke Conley.</strong> I've been working with kids of all ages and dispositions for over half my life, and have been writing code for nearly a decade. (I’m currently a resident at the <a href="https://www.recurse.com/" target="_blank" rel="noopener">Recurse Center</a>.)</p>
-          <p>My approach is grounded in <strong>unconditional positive regard</strong> and tuned to a student's existing interests.</p>
-          <p>I’ve taught everyone from working engineers to bootcamp programs to NYC public school students.</p>
-          <p>If this can benefit you or a student you know, please <a href="https://calendly.com/luke-conley/turtle-coding-intro">book a free intro call.</a></p>
+          <p>These methods are <strong>especially useful for students who are sensitive, have a diagnosed learning difficulty, or have been told they “don’t have a brain for math.”</strong></p>
         </div>
       </div>
     </section>
@@ -647,17 +741,18 @@ back_to_start()  <span class="c">-- hyp c = 150</span></code></pre>
 
         <div class="rates">
           <div class="rate-card featured reveal">
-            <span class="tag">Recommended to start</span>
+            <span class="tag">Recommended</span>
             <h3>In-person tutoring</h3>
             <div class="price">$150<span> / hour</span></div>
-            <p>Based in NYC. I always encourage an in-person approach for the first few meetings at least.</p>
+            <p>Based in NYC. We don't need to be in the same room to establish rapport, but it helps.</p>
           </div>
           <div class="rate-card reveal">
             <h3>Over Zoom</h3>
             <div class="price">$100<span> / hour</span></div>
-            <p>Flexible remote sessions once we’ve built a rhythm together.</p>
+            <p>I'm also available over video conference.</p>
           </div>
         </div>
+
 
         <div class="cta-band reveal" style="margin-top:2.75rem">
           <h2>Book a free introductory call</h2>
@@ -697,6 +792,47 @@ back_to_start()  <span class="c">-- hyp c = 150</span></code></pre>
         });
       }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
       els.forEach(function (el) { io.observe(el); });
+    })();
+
+    // Tabs: activate on click, with roving-tabindex arrow-key navigation
+    (function () {
+      document.querySelectorAll('.tabs').forEach(function (tabs) {
+        var tablist = tabs.querySelector('.tablist');
+        var buttons = Array.prototype.slice.call(tabs.querySelectorAll('.tab'));
+        var panels  = buttons.map(function (b) { return document.getElementById(b.getAttribute('aria-controls')); });
+        if (!tablist || buttons.length < 2 || panels.some(function (p) { return !p; })) return;
+
+        function select(n, focus) {
+          buttons.forEach(function (b, idx) {
+            var on = idx === n;
+            b.setAttribute('aria-selected', on ? 'true' : 'false');
+            b.tabIndex = on ? 0 : -1;
+            panels[idx].hidden = !on;
+          });
+          if (focus) buttons[n].focus();
+        }
+
+        buttons.forEach(function (b, idx) {
+          b.addEventListener('click', function () { select(idx, false); });
+        });
+
+        tablist.addEventListener('keydown', function (e) {
+          var i = buttons.indexOf(document.activeElement);
+          if (i === -1) return;
+          var n = null;
+          if (e.key === 'ArrowRight') n = (i + 1) % buttons.length;
+          else if (e.key === 'ArrowLeft') n = (i - 1 + buttons.length) % buttons.length;
+          else if (e.key === 'Home') n = 0;
+          else if (e.key === 'End') n = buttons.length - 1;
+          if (n === null) return;
+          e.preventDefault();
+          select(n, true);
+        });
+
+        // Only take over the layout once the interactive behaviour is wired up
+        tabs.classList.add('js-tabs');
+        select(0, false);
+      });
     })();
 
     // Turtle-graphics example carousel: auto-advance + manual controls

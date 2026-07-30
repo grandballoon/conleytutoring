@@ -15,7 +15,7 @@ However, even kids with a go-getter attitude towards math, programming, or game 
 ### Who am I?
 My name is Luke Conley. I've been working with kids of all ages and dispositions for over half my life, and have been writing code for nearly a decade. In my teens and early twenties I worked as a peer support and camp counselor with children with a very wide range of needs at Our Victory Day Camp, founded by Iris & Fred Tunick, and in the practice of the child psychologist Bob Milich. 
 
-I’ve taught coding, algorithms, and game development to both professional and prospective engineers, as well as teenagers and elementary school-age kids. I’m currently a resident at the Recurse Center.
+I’ve taught coding, algorithms, and game development to both professional and prospective engineers, as well as teenagers and elementary school-age kids.
 
 Given my love and respect for children and my years of experience working alongside them to improve their confidence and power, I always take a sensitive and patient approach grounded foremost in unconditional positive regard, and I have seen kids undergo miraculous transformations when their natural intelligence meets this respect in a supportive environment. 
 
