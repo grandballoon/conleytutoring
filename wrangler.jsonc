@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "conleytutoring",
+  "compatibility_date": "2026-07-30",
+
+  // Static-only Worker: no `main` entrypoint, so Cloudflare serves `public/`
+  // directly from its edge cache. Everything outside `public/` (README,
+  // wrangler config, package manifest) stays private to the repo.
+  "assets": {
+    "directory": "./public"
+  },
+
+  "observability": {
+    "enabled": true
+  }
+}

@@ -3,3 +3,8 @@
 
 # Editor scratch
 *.swp
+
+# Node / Wrangler
+node_modules/
+.wrangler/
+.dev.vars

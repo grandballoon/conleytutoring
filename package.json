@@ -1,0 +1,12 @@
+{
+  "name": "conleytutoring",
+  "private": true,
+  "description": "Static site for conleytutoring.com, served by Cloudflare Workers.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.116.0"
+  }
+}
