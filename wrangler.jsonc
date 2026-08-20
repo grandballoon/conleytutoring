@@ -10,6 +10,13 @@
     "directory": "./public"
   },
 
+  // The apex is declared here, not just in the dashboard, so every deploy
+  // re-asserts it. Dashboard-only binding is how the domain silently drifted
+  // onto a stale asset set while `wrangler deploy` kept reporting success.
+  "routes": [
+    { "pattern": "conleytutoring.com", "custom_domain": true }
+  ],
+
   "observability": {
     "enabled": true
   }
