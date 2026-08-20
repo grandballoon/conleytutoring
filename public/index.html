@@ -7,10 +7,106 @@
   <meta name="description" content="One-on-one tutoring in coding, math, and game development using Lua and Turtle Graphics. Building confidence, grades, and executive functioning, online over Zoom." />
   <meta name="color-scheme" content="light" />
 
+  <!-- Icons: the header brand mark, knocked out white on brand green.
+       SVG for current browsers; the .ico is what everything older asks for
+       by name, and `sizes` on it keeps Chrome from preferring it. -->
+  <link rel="icon" href="/favicon.ico" sizes="32x32" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
   <!-- Open Graph -->
   <meta property="og:title" content="Conley Tutoring — Coding & Game Development for Kids" />
   <meta property="og:description" content="Learn programming and math from the ground up with Lua and Turtle Graphics. Patient, individualized tutoring online over Zoom." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://conleytutoring.com/" />
+  <meta property="og:site_name" content="Conley Tutoring" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:image" content="https://conleytutoring.com/og-image.jpg" />
+  <meta property="og:image:secure_url" content="https://conleytutoring.com/og-image.jpg" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Conley Tutoring — coding and game development tutoring for kids of any age. Online over Zoom. Photo of tutor Luke Conley." />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Conley Tutoring — Coding & Game Development for Kids" />
+  <meta name="twitter:description" content="Learn programming and math from the ground up with Lua and Turtle Graphics. Patient, individualized tutoring online over Zoom." />
+  <meta name="twitter:image" content="https://conleytutoring.com/og-image.jpg" />
+  <meta name="twitter:image:alt" content="Conley Tutoring — coding and game development tutoring for kids of any age. Online over Zoom. Photo of tutor Luke Conley." />
+
+  <link rel="canonical" href="https://conleytutoring.com/" />
+
+  <!-- Structured data: service-area local business + the person behind it -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": ["LocalBusiness", "EducationalOrganization"],
+        "@id": "https://conleytutoring.com/#business",
+        "name": "Conley Tutoring",
+        "url": "https://conleytutoring.com/",
+        "description": "One-on-one tutoring in coding, math, and game development using Lua and Turtle Graphics, online over Zoom.",
+        "email": "luke@conleytutoring.com",
+        "image": "https://conleytutoring.com/og-image.jpg",
+        "logo": "https://conleytutoring.com/favicon.svg",
+        "priceRange": "$150 per hour",
+        "founder": { "@id": "https://conleytutoring.com/#luke" },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Brooklyn",
+          "addressRegion": "NY",
+          "addressCountry": "US"
+        },
+        "areaServed": { "@type": "Country", "name": "United States" },
+        "knowsAbout": [
+          "Computer programming",
+          "Lua programming language",
+          "Turtle graphics",
+          "Game development",
+          "Mathematics tutoring",
+          "Executive functioning support"
+        ],
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Tutoring",
+          "itemListElement": [
+            {
+              "@type": "Offer",
+              "priceCurrency": "USD",
+              "price": "150",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Online tutoring",
+                "description": "One-on-one coding, math, and game development sessions over video conference."
+              }
+            }
+          ]
+        }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://conleytutoring.com/#luke",
+        "name": "Luke Conley",
+        "jobTitle": "Coding and math tutor",
+        "description": "NYC high school computer science teacher, professional software engineer, and former one-on-one aide for children with autism.",
+        "email": "luke@conleytutoring.com",
+        "url": "https://conleytutoring.com/",
+        "sameAs": ["https://luaturtle.com/"],
+        "worksFor": { "@id": "https://conleytutoring.com/#business" }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://conleytutoring.com/#website",
+        "url": "https://conleytutoring.com/",
+        "name": "Conley Tutoring",
+        "publisher": { "@id": "https://conleytutoring.com/#business" },
+        "inLanguage": "en-US"
+      }
+    ]
+  }
+  </script>
 
   <style>
     /* ---------- Design tokens ---------- */
@@ -116,8 +212,17 @@
     .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
     .btn-ghost:hover { background: var(--bg-tint); color: var(--ink); border-color: var(--brand); }
     .btn-lg { padding: 1rem 1.8rem; font-size: 1.05rem; }
+    /* The header CTA and the mobile booking bar are complements across a single
+       boundary, so exactly one of them is ever on screen. Below 640px the header
+       cannot hold a labelled button: at a 320px viewport the wordmark leaves 94px
+       of room and "Book a call" needs 107px, so the booking action moves to a
+       fixed bar at the bottom of the viewport instead. See .book-bar. */
     .header-cta { display: none; }
-    @media (min-width: 640px) { .header-cta { display: inline-flex; } }
+    .book-bar   { display: block; }
+    @media (min-width: 640px) {
+      .header-cta { display: inline-flex; }
+      .book-bar   { display: none; }
+    }
 
     /* ---------- Hero ---------- */
     .hero { padding-top: clamp(2.5rem, 6vw, 4rem); padding-bottom: clamp(2.5rem, 6vw, 4rem); position: relative; overflow: hidden; }
@@ -198,8 +303,13 @@
     }
     .slide { flex: 0 0 100%; min-width: 0; }
 
-    .carousel-nav { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-top: 1rem; }
-    .carousel-dots { display: flex; align-items: center; gap: .5rem; }
+    /* Three explicit columns rather than space-between. The play/pause control is
+       hidden when JS is off, and with auto-placement its absence would pull the
+       dots out of the centre. Named columns keep the row identical either way. */
+    .carousel-nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: .75rem; margin-top: 1rem; }
+    .play-toggle { grid-column: 1; justify-self: start; }
+    .carousel-dots { grid-column: 2; display: flex; align-items: center; justify-content: center; gap: .5rem; }
+    .carousel-step { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: .5rem; }
     .cdot {
       width: 9px; height: 9px; padding: 0; border: none; border-radius: 50%;
       background: var(--line); cursor: pointer; transition: background .2s ease, transform .2s ease;
@@ -213,6 +323,12 @@
     }
     .cbtn:hover { border-color: var(--brand); color: var(--brand-deep); background: var(--brand-tint); }
     .cbtn svg { width: 16px; height: 16px; }
+    /* .cbtn sets display, and an author rule beats the UA rule for [hidden]. */
+    .cbtn[hidden] { display: none; }
+    /* One icon per state. The button is inline-grid, so the visible one centres itself. */
+    .play-toggle .icon-play { display: none; }
+    .play-toggle.is-paused .icon-pause { display: none; }
+    .play-toggle.is-paused .icon-play { display: block; }
 
     /* ---------- Prose blocks ---------- */
     .section-head { max-width: 60ch; margin-bottom: 2.25rem; }
@@ -299,16 +415,30 @@
       .about-grid { grid-template-columns: .8fr 1.2fr; align-items: start; }
       .about-card { position: sticky; top: 90px; }
     }
+    /* The card is one 360px column: circle, name, role, and credentials share a
+       left edge at every width. The cap is what keeps them together -- below
+       the 860px breakpoint the card goes full width, and an uncapped circle
+       would sit centred over text running twice as wide. It also keeps the
+       700px asset a true 2x at every breakpoint. The two-column layout hands
+       this card ~355px, so the cap only engages between roughly 458px and
+       859px of viewport width; phones and desktop are under it either way. */
+    .about-who { max-width: 360px; margin-inline: auto; }
     .avatar {
       width: 100%; aspect-ratio: 1 / 1; border-radius: 50%;
       box-shadow: var(--shadow-sm);
+      /* The framing is baked into the file -- re-crop in assets/build-headshot.py
+         rather than panning with background-position, which would make the
+         download carry rows the circle never paints. WebP with a JPEG fallback:
+         browsers without image-set() type() support take the plain url() above. */
       background-image: url("headshot.jpg");
+      background-image: image-set(url("headshot.webp") type("image/webp"),
+                                  url("headshot.jpg")  type("image/jpeg"));
       background-repeat: no-repeat;
-      background-size: 100%;          /* ZOOM: bigger % = more zoomed in (try 130%, 160%) */
-      background-position: 50% 30%;   /* PAN: left/right %  up/down % (0%=top, 100%=bottom) */
+      background-size: cover;
+      background-position: 50% 50%;
       background-color: var(--brand); /* fallback while image loads */
     }
-    .about-card h3 { font-size: 1.25rem; }
+    .about-card h2 { font-size: 1.25rem; margin-top: 1.25rem; }
     .about-card .role { color: var(--ink-faint); font-size: .92rem; margin-top: .2rem; }
     .credlist { list-style: none; padding: 0; margin: 1.25rem 0 0; display: grid; gap: .7rem; }
     .credlist li { display: flex; gap: .6rem; font-size: .92rem; color: var(--ink-soft); }
@@ -345,23 +475,51 @@
     .tcard .who .name { font-weight: 600; font-size: .95rem; color: var(--ink); }
     .tcard .who .rel { font-size: .85rem; color: var(--ink-faint); }
 
+    /* ---------- FAQ ---------- */
+    /* Native <details>, so the dropdowns open, take focus, and are keyboard
+       operable with no JS. Nothing in the script block touches this section. */
+    .faq-list { display: grid; gap: .75rem; max-width: 68ch; }
+    .faq-item {
+      background: var(--bg-elevated); border: 1px solid var(--line);
+      border-radius: var(--radius); box-shadow: var(--shadow-sm);
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .faq-item[open] { border-color: #d3e2db; box-shadow: var(--shadow-md); }
+    .faq-q {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 1.15rem 1.4rem; cursor: pointer;
+      font-weight: 600; font-size: 1.02rem; color: var(--ink);
+      border-radius: var(--radius);
+      transition: color .2s ease;
+    }
+    /* Kill the native disclosure triangle in both engines; the chevron replaces it. */
+    .faq-q { list-style: none; }
+    .faq-q::-webkit-details-marker { display: none; }
+    .faq-q:hover { color: var(--brand-deep); }
+    .faq-q .chev {
+      width: 20px; height: 20px; flex: none; color: var(--ink-faint);
+      transition: transform .2s ease, color .2s ease;
+    }
+    .faq-item[open] > .faq-q .chev { transform: rotate(180deg); color: var(--brand); }
+    .faq-a { padding: 0 1.4rem 1.35rem; color: var(--ink-soft); font-size: .98rem; max-width: 62ch; }
+    .faq-a p + p { margin-top: .9rem; }
+
     /* ---------- Rates / CTA ---------- */
-    .rates { display: grid; gap: 1.1rem; grid-template-columns: 1fr; margin-top: 2.25rem; max-width: 30rem; margin-inline: auto; }
+    /* #approach, #faq, and #book share a background, so each stacked pair's
+       block padding reads as one oversized gap. Trim the top half of each seam. */
+    #faq, #book { padding-block-start: clamp(1rem, 2.5vw, 1.75rem); }
+    /* One rate. The card holds a 26rem column so it stays a card rather than
+       stretching into a banner, and centers in whatever width it is given. */
+    .rates { max-width: 26rem; margin: 2.25rem auto 0; }
     .rate-card {
       background: var(--bg-elevated); border: 1px solid var(--line); border-radius: var(--radius);
-      padding: 1.6rem; box-shadow: var(--shadow-sm); position: relative;
+      padding: 1.6rem; box-shadow: var(--shadow-sm);
     }
     .rate-card.featured { border-color: var(--brand); box-shadow: var(--shadow-md); }
-    .rate-card .tag {
-      position: absolute; top: 1.1rem; right: 1.1rem; font-size: .72rem; font-weight: 600;
-      text-transform: uppercase; letter-spacing: .05em; color: var(--brand-deep);
-      background: var(--brand-tint); padding: .25rem .6rem; border-radius: 999px;
-    }
     .rate-card h3 { font-size: 1.02rem; color: var(--ink-soft); font-weight: 600; }
     .rate-card .price { font-size: 2.4rem; font-weight: 700; letter-spacing: -.03em; margin: .35rem 0 .1rem; }
     .rate-card .price span { font-size: .95rem; font-weight: 500; color: var(--ink-faint); letter-spacing: 0; }
     .rate-card p { color: var(--ink-faint); font-size: .92rem; }
-    .rates-note { margin-top: 1.1rem; color: var(--ink-faint); font-size: .92rem; text-align: center; }
 
     /* ---------- Final CTA band ---------- */
     .cta-band { background: var(--ink); color: #eaf2ee; border-radius: clamp(20px, 4vw, 28px); padding: clamp(2.25rem, 6vw, 3.5rem); text-align: center; position: relative; overflow: hidden; }
@@ -383,6 +541,36 @@
     footer.site-footer { padding-block: 2.5rem; border-top: 1px solid var(--line); }
     footer.site-footer .wrap { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; color: var(--ink-faint); font-size: .9rem; }
     footer.site-footer a { color: var(--ink-soft); }
+
+    /* ---------- Mobile booking bar ---------- */
+    /* Phones only; the display toggle lives with .header-cta above. Visible by
+       default so the bar still works without JS, and tucked away by the script
+       whenever one of the page's own booking buttons is already on screen. */
+    .book-bar {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 45;
+      padding: .6rem 1.25rem calc(.6rem + env(safe-area-inset-bottom, 0px));
+      /* --bg at .94 rather than the header's .82: the header usually floats over
+         whitespace, this sits over whatever content happens to scroll under it. */
+      background: rgba(247, 249, 251, .94);
+      backdrop-filter: saturate(160%) blur(12px);
+      -webkit-backdrop-filter: saturate(160%) blur(12px);
+      border-top: 1px solid var(--line);
+      box-shadow: 0 -6px 22px rgba(20, 40, 33, .08);
+      transition: none;
+    }
+    .book-bar .btn { width: 100%; }
+    /* visibility keeps the tucked button out of the tab order and the a11y tree;
+       it flips only after the slide finishes on the way out, immediately on the
+       way in, because a transition reads from the state being moved *to*. */
+    .book-bar.is-tucked { transform: translateY(110%); visibility: hidden; }
+    .book-bar.is-animated { transition: transform .25s ease, visibility 0s; }
+    .book-bar.is-animated.is-tucked { transition: transform .25s ease, visibility 0s linear .25s; }
+    /* The global reduced-motion rule zeroes transition-duration but not the delay
+       above, which would leave the tucked button focusable for a quarter second.
+       Dropping the transition entirely makes the state change atomic. */
+    @media (prefers-reduced-motion: reduce) {
+      .book-bar, .book-bar.is-animated, .book-bar.is-animated.is-tucked { transition: none; }
+    }
 
     /* reveal-on-scroll */
     .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
@@ -426,9 +614,8 @@
             <a class="btn btn-ghost btn-lg" href="#approach">See the approach</a>
           </div>
           <div class="hero-meta">
-            <span aria-hidden="true"></span>
             <span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m23 7-7 5 7 5V7Z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="16" rx="2"/><path d="m22 8-6 4 6 4V8Z"/></svg>
               Online over Zoom
             </span>
             <span>
@@ -452,7 +639,8 @@
           <div class="slides">
             <div class="slides-track">
             <!-- ===== Panel 1 · Spiral ===== -->
-            <div class="slide is-active" data-file="spiral.lua">
+            <div class="slide is-active" data-file="spiral.lua"
+                 role="group" aria-roledescription="slide" aria-label="1 of 3: Spiral">
               <div class="turtle-stage">
                 <svg viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
                   <defs>
@@ -491,7 +679,8 @@
             </div>
 
             <!-- ===== Panel 2 · Game ===== -->
-            <div class="slide" data-file="invaders.lua">
+            <div class="slide" data-file="invaders.lua"
+                 role="group" aria-roledescription="slide" aria-label="2 of 3: Space shooter game">
               <div class="turtle-stage stage-dark">
                 <svg viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <!-- starfield -->
@@ -539,7 +728,8 @@
             </div>
 
             <!-- ===== Panel 3 · Pythagorean theorem ===== -->
-            <div class="slide" data-file="pythagoras.lua">
+            <div class="slide" data-file="pythagoras.lua"
+                 role="group" aria-roledescription="slide" aria-label="3 of 3: Pythagorean theorem">
               <div class="turtle-stage">
                 <svg viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
                   <defs>
@@ -605,17 +795,25 @@ back_to_start()  <span class="c">-- hyp c = 150</span></code></pre>
 
           <!-- carousel controls -->
           <div class="carousel-nav">
-            <button class="cbtn prev" type="button" aria-label="Previous example">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+            <!-- The carousel script unhides this. Without JS nothing auto-advances,
+                 so the control would have nothing to act on and should not appear. -->
+            <button class="cbtn play-toggle" type="button" hidden aria-label="Pause the examples">
+              <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="8" y="6" width="3.4" height="12" rx="1.2"/><rect x="12.6" y="6" width="3.4" height="12" rx="1.2"/></svg>
+              <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.6 17.6 12 9.5 17.4Z"/></svg>
             </button>
-            <div class="carousel-dots" role="tablist" aria-label="Choose an example">
-              <button class="cdot is-active" type="button" role="tab" aria-selected="true" aria-label="Spiral"></button>
-              <button class="cdot" type="button" role="tab" aria-selected="false" aria-label="Space shooter game"></button>
-              <button class="cdot" type="button" role="tab" aria-selected="false" aria-label="Pythagorean theorem"></button>
+            <div class="carousel-dots" role="group" aria-label="Choose an example">
+              <button class="cdot is-active" type="button" aria-current="true" aria-label="Show example 1 of 3: Spiral"></button>
+              <button class="cdot" type="button" aria-label="Show example 2 of 3: Space shooter game"></button>
+              <button class="cdot" type="button" aria-label="Show example 3 of 3: Pythagorean theorem"></button>
             </div>
-            <button class="cbtn next" type="button" aria-label="Next example">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-            </button>
+            <div class="carousel-step">
+              <button class="cbtn prev" type="button" aria-label="Previous example">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <button class="cbtn next" type="button" aria-label="Next example">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -625,7 +823,26 @@ back_to_start()  <span class="c">-- hyp c = 150</span></code></pre>
     <section class="about" id="about">
       <div class="wrap about-grid">
         <aside class="about-card">
-          <div class="avatar" role="img" aria-label="Luke Conley"></div>
+          <div class="about-who">
+            <!-- Decorative: the name it used to carry is now the heading below it. -->
+            <div class="avatar"></div>
+            <h2>Luke Conley</h2>
+            <p class="role">Coding, math &amp; game development tutor</p>
+            <ul class="credlist">
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                7+ years working directly with children
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                8+ years of coding experience
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                15+ years of involvement in the special needs community
+              </li>
+            </ul>
+          </div>
         </aside>
 
         <div class="prose reveal">
@@ -730,6 +947,62 @@ back_to_start()  <span class="c">-- hyp c = 150</span></code></pre>
       </div>
     </section>
 
+    <!-- ===== FAQ ===== -->
+    <section id="faq">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">Questions</span>
+          <h2>The practical details, answered.</h2>
+        </div>
+
+        <div class="faq-list reveal">
+          <details class="faq-item">
+            <summary class="faq-q">
+              <span>How long is a typical session, and how often?</span>
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-a">
+              <!-- TODO (fixes.md item 6): replace with the real answer. Session length and cadence. -->
+              <p>Weekly is good, but more or less often is feasible, depending on the student.</p> 
+              <p>Turtle work tends to "stick" in a way that makes "grinding" less necessary than we're used to.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary class="faq-q">
+              <span>What makes this different from other math tutoring?</span>
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-a">
+              <!-- TODO (fixes.md item 6): replace with the real answer. How this differs from other math tutoring. -->
+              <p>Turtle coding is all about making mathematical ideas <em>feel familiar.</em></p>
+              <p>This means "lightbulb moments" become more frequent and repetable.</p> 
+              <p>Anxiety goes down as the student recognizes their growing competence.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary class="faq-q">
+              <span>What is the cancellation policy?</span>
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-a">
+              <!-- TODO (fixes.md item 6): replace with the real answer. The cancellation policy. -->
+              <p>I don't enforce a fee for cancellations. Just keep me in the loop as you can.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary class="faq-q">
+              <span>What does my kid need — computer, browser, headphones?</span>
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-a">
+              <!-- TODO (fixes.md item 6): replace with the real answer. What a student needs to get set up. -->
+              <p>A computer with an internet connection, and the video conference software of your choice.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== Rates + CTA ===== -->
     <section id="book">
       <div class="wrap">
@@ -741,7 +1014,7 @@ back_to_start()  <span class="c">-- hyp c = 150</span></code></pre>
         <div class="rates">
           <div class="rate-card featured reveal">
             <h3>Online tutoring</h3>
-            <div class="price">$90<span> / hour</span></div>
+            <div class="price">$150<span> / hour</span></div>
             <p>One-on-one sessions over video conference, wherever you are.</p>
           </div>
         </div>
@@ -767,6 +1040,14 @@ back_to_start()  <span class="c">-- hyp c = 150</span></code></pre>
     </div>
   </footer>
 
+  <!-- ===== Persistent booking bar (phones; see .book-bar) ===== -->
+  <div class="book-bar">
+    <a class="btn btn-primary" href="https://calendly.com/luke-conley/turtle-coding-intro" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Book a free intro call
+    </a>
+  </div>
+
   <script>
     // Current year
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -785,6 +1066,30 @@ back_to_start()  <span class="c">-- hyp c = 150</span></code></pre>
         });
       }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
       els.forEach(function (el) { io.observe(el); });
+    })();
+
+    // Mobile booking bar: tuck it away whenever one of the page's own booking
+    // buttons is on screen, so the bar never covers or duplicates a live CTA.
+    // Without JS or IntersectionObserver the bar simply stays visible.
+    // This runs at every width even though CSS only shows the bar under 640px,
+    // so a rotation or resize past the boundary reveals an already-correct state.
+    (function () {
+      var bar = document.querySelector('.book-bar');
+      if (!bar || !('IntersectionObserver' in window)) return;
+      var gates = Array.prototype.slice.call(document.querySelectorAll('.hero-actions, #book .cta-band'));
+      if (!gates.length) return;
+      var onScreen = gates.map(function () { return false; });
+
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { onScreen[gates.indexOf(e.target)] = e.isIntersecting; });
+        bar.classList.toggle('is-tucked', onScreen.some(Boolean));
+        // Transitions start only after the first reading, so the opening state
+        // is applied silently instead of sliding down on load.
+        if (!bar.classList.contains('is-animated')) {
+          requestAnimationFrame(function () { bar.classList.add('is-animated'); });
+        }
+      });
+      gates.forEach(function (g) { io.observe(g); });
     })();
 
     // Tabs: activate on click, with roving-tabindex arrow-key navigation
@@ -838,11 +1143,18 @@ back_to_start()  <span class="c">-- hyp c = 150</span></code></pre>
       var fileEl = card.querySelector('.file');
       var prev   = card.querySelector('.cbtn.prev');
       var next   = card.querySelector('.cbtn.next');
+      var toggle = card.querySelector('.play-toggle');
+      // Only the drawings. The chevron and play/pause glyphs are SVG too, and
+      // pausing them would be a no-op, but naming the real targets is clearer.
+      var stages = Array.prototype.slice.call(card.querySelectorAll('.turtle-stage svg'));
       if (!track || slides.length < 2) return;
 
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var DELAY = 5200;
       var i = 0, timer = null;
+      // The user's own stop/play choice. Reduced motion only picks its starting
+      // value, so someone with that preference can still opt in to the motion.
+      var paused = reduce;
 
       function show(n) {
         i = (n + slides.length) % slides.length;
@@ -854,34 +1166,61 @@ back_to_start()  <span class="c">-- hyp c = 150</span></code></pre>
         dots.forEach(function (d, idx) {
           var on = idx === i;
           d.classList.toggle('is-active', on);
-          d.setAttribute('aria-selected', on ? 'true' : 'false');
+          // aria-current marks the dot for the slide on screen; absent on the rest
+          if (on) d.setAttribute('aria-current', 'true');
+          else d.removeAttribute('aria-current');
         });
         if (fileEl) fileEl.textContent = slides[i].getAttribute('data-file') || '';
       }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } }
       function restart() {
-        if (timer) { clearInterval(timer); timer = null; }
-        if (!reduce) timer = setInterval(function () { show(i + 1); }, DELAY);
+        stop();
+        if (!paused) timer = setInterval(function () { show(i + 1); }, DELAY);
       }
       function go(n) { show(n); restart(); }
+
+      // The WCAG 2.2.2 control. It stops the auto-advance and the drawings, since
+      // the SMIL loops are the other thing on this card that moves on its own.
+      // The accessible name changes with the state, which is the media-player
+      // convention; aria-pressed would leave the icon and the name disagreeing.
+      function setPaused(v) {
+        paused = v;
+        if (toggle) {
+          toggle.classList.toggle('is-paused', v);
+          toggle.setAttribute('aria-label', v ? 'Play the examples' : 'Pause the examples');
+        }
+        stages.forEach(function (svg) {
+          try { if (v) svg.pauseAnimations(); else svg.unpauseAnimations(); } catch (e) {}
+        });
+        restart();
+      }
 
       if (prev) prev.addEventListener('click', function () { go(i - 1); });
       if (next) next.addEventListener('click', function () { go(i + 1); });
       dots.forEach(function (d, idx) { d.addEventListener('click', function () { go(idx); }); });
-      // pause on hover / focus so a reader can study a panel
-      card.addEventListener('mouseenter', function () { if (timer) { clearInterval(timer); timer = null; } });
+      if (toggle) {
+        toggle.hidden = false;
+        toggle.addEventListener('click', function () { setPaused(!paused); });
+      }
+      // Pause on hover / focus so a reader can study a panel. This suspends the
+      // timer only: it leaves `paused` alone, so it can neither override the
+      // button nor resume from it, and it deliberately does not freeze the
+      // drawings, which would make the card lurch under a passing cursor.
+      card.addEventListener('mouseenter', stop);
       card.addEventListener('mouseleave', restart);
-      card.addEventListener('focusin', function () { if (timer) { clearInterval(timer); timer = null; } });
+      card.addEventListener('focusin', stop);
       card.addEventListener('focusout', restart);
 
-      // Respect reduced motion: freeze each SVG's SMIL animation on a settled frame
+      // Respect reduced motion: settle each drawing on a representative frame.
+      // setPaused below is what actually freezes it there.
       if (reduce) {
-        card.querySelectorAll('svg').forEach(function (svg) {
-          try { svg.setCurrentTime(6); svg.pauseAnimations(); } catch (e) {}
+        stages.forEach(function (svg) {
+          try { svg.setCurrentTime(6); } catch (e) {}
         });
       }
 
       show(0);
-      restart();
+      setPaused(paused);
     })();
   </script>
 </body>

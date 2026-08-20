@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!--
+  Source template for public/og-image.jpg (the 1200x630 Open Graph share card).
+  Not served: wrangler only publishes ./public, so this stays private to the repo.
+
+  Regenerate after editing:
+
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+      --headless --disable-gpu --hide-scrollbars \
+      --force-device-scale-factor=2 --window-size=1200,630 \
+      --screenshot=og-2x.png assets/og-card.html
+
+    python3 -c 'from PIL import Image; \
+      Image.open("og-2x.png").convert("RGB").resize((1200,630), Image.LANCZOS) \
+      .save("public/og-image.jpg", "JPEG", quality=85, optimize=True, \
+            progressive=True, subsampling=0)'
+
+  Rendered at 2x and downsampled so the text edges supersample cleanly.
+  Colors and the brand mark are copied from public/index.html; if the site's
+  tokens change, update them here too.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  :root {
+    --bg:            #f7f9fb;
+    --bg-elevated:   #ffffff;
+    --ink:           #16211d;
+    --ink-soft:      #46564f;
+    --ink-faint:     #6b7b74;
+    --line:          #e2e8e5;
+    --brand:         #1fae5a;
+    --brand-deep:    #158043;
+    --brand-tint:    #e2f7e6;
+    --accent:        #4b62e8;
+    --sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1200px; height: 630px; }
+  body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  .card {
+    position: relative;
+    width: 1200px; height: 630px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 396px;
+    align-items: center;
+    gap: 52px;
+    padding: 74px 70px 74px 84px;
+    /* soft brand wash echoing the hero */
+    background:
+      radial-gradient(760px 520px at 92% 12%, rgba(31, 174, 90, .13), transparent 68%),
+      radial-gradient(620px 480px at 4% 96%, rgba(75, 98, 232, .09), transparent 66%),
+      var(--bg);
+  }
+  /* the site's 6px brand rule, rendered as a top edge */
+  .card::before {
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 8px;
+    background: linear-gradient(100deg, var(--brand) 10%, var(--accent) 95%);
+  }
+
+  .left { min-width: 0; }
+
+  .brand { display: flex; align-items: center; gap: 16px; }
+  .brand-mark { width: 62px; height: 62px; flex: none; }
+  .wordmark { display: flex; flex-direction: column; gap: 3px; }
+  .wordmark b { font-size: 34px; font-weight: 700; letter-spacing: -.015em; line-height: 1.1; }
+  .wordmark small { font-size: 17px; font-weight: 500; color: var(--ink-faint); letter-spacing: .01em; }
+
+  h1 {
+    margin-top: 42px;
+    font-size: 54px; line-height: 1.13; font-weight: 700; letter-spacing: -.028em;
+    text-wrap: balance;
+  }
+  h1 .grad {
+    background: linear-gradient(100deg, var(--brand) 10%, var(--accent) 95%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  .meta { display: flex; flex-wrap: wrap; gap: 14px 22px; margin-top: 44px; }
+  .meta span {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 21px; font-weight: 550; color: var(--ink-soft);
+  }
+  .meta svg { width: 23px; height: 23px; flex: none; color: var(--brand); }
+
+  .right { display: flex; justify-content: center; }
+  .avatar {
+    position: relative;
+    width: 396px; height: 396px; border-radius: 50%;
+    background-image: url("headshot-source.jpg");
+    background-size: 100%;
+    background-position: 50% 30%;
+    background-repeat: no-repeat;
+    background-color: var(--brand);
+    box-shadow:
+      0 0 0 10px var(--bg-elevated),
+      0 0 0 13px var(--brand-tint),
+      0 18px 50px rgba(20, 40, 33, .16);
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="left">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <rect width="40" height="40" rx="11" fill="#e2f7e6"/>
+          <path d="M20 7.5 L29.5 29.5 L20 24.5 L10.5 29.5 Z" fill="#1fae5a" stroke="#1fae5a" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>
+        <span class="wordmark">
+          <b>Conley Tutoring</b>
+          <small>Code · Math · Game Dev</small>
+        </span>
+      </div>
+
+      <h1>Coding &amp; game development tutoring for <span class="grad">kids of any age</span>.</h1>
+
+      <div class="meta">
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="16" rx="2"/><path d="m22 8-6 4 6 4V8Z"/></svg>
+          Online over Zoom
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          Free intro call
+        </span>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="avatar"></div>
+    </div>
+  </div>
+</body>
+</html>
